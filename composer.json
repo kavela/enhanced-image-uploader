@@ -1,0 +1,60 @@
+{
+  "name": "kavela/enhanced-image-uploader",
+  "description": "Image fields for Nova apps",
+  "keywords": [
+    "laravel",
+    "nova"
+  ],
+  "homepage": "https://github.com/kavela/enhanced-image-uploader",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "George Kavelashvili",
+      "email": "dev.kavelashvili@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://nova.laravel.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4.5",
+    "ext-json": "*",
+    "intervention/image": "^2.5",
+    "laravel/nova": "^3.0"
+  },
+  "require-dev": {
+    "mockery/mockery": "^1.1",
+    "orchestra/testbench": "^5.0|^6.0",
+    "phpunit/phpunit": "^8.0|^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Kavela\\EnhancedImageUploader\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Kavela\\EnhancedImageUploader\\Tests\\": "tests"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Kavela\\EnhancedImageUploader\\Providers\\ImagesServiceProvider",
+        "Intervention\\Image\\ImageServiceProvider"
+      ],
+      "aliases": {
+        "Image": "Intervention\\Image\\Facades\\Image"
+      }
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
