@@ -14,9 +14,21 @@ You can install this package into a Laravel app that uses [Nova](https://nova.la
 composer require kavela/enhanced-image-uploader
 ```
 
+```bash
+php artisan enhanced-image-uploader:install
+```
+
+```bash
+php artisan migrate
+```
+
 ## Usage
 
-To make an Eloquent model imageable just add the `Kavela\EnhancedImageUploader\Traits\HasImages` trait to it:
+To make an Eloquent model imageable follow next steps:
+
+Update `config/enhanced-image-uploader.php` configuration file.
+
+Next add the `Kavela\EnhancedImageUploader\Traits\HasImages` trait to it:
 
 ```php
 class Project extends Model
