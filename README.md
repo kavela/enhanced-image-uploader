@@ -4,7 +4,7 @@ This package contains a Nova field to add images to resources.
 
 ## Requirements
 
-This Nova field requires PHP 7.4 or higher.
+This Nova field requires PHP 7.2 or higher.
 
 ## Installation
 

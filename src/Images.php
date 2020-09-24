@@ -13,7 +13,7 @@ class Images extends Field
 {
     public $component = 'enhanced-image-uploader';
 
-    private int $repeaterIndex = 0;
+    private $repeaterIndex = 0;
 
     public function __construct($name, $attribute = null, $resolveCallback = null)
     {
