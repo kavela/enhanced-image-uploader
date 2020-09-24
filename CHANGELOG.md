@@ -2,6 +2,10 @@
 
 All notable changes to `enhanced-image-uploader` will be documented in this file
 
+## 1.0.3 - 2020-09-24
+
+- Update composer.json and CHANGELOG.md files
+
 ## 1.0.2 - 2020-09-24
 
 - Add PHP 7.2.x version support
