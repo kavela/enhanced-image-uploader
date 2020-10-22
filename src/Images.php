@@ -13,7 +13,7 @@ class Images extends Field
 {
     public $component = 'enhanced-image-uploader';
 
-    private $repeaterIndex = 0;
+    protected $repeaterIndex = 0;
 
     public function __construct($name, $attribute = null, $resolveCallback = null)
     {
@@ -27,7 +27,7 @@ class Images extends Field
         $this -> limit();
     }
 
-    public function limit($limit = PHP_INT_MAX)
+    public function limit($limit = 100)
     {
         return $this -> withMeta([ 'limit' => $limit ]);
     }
@@ -39,10 +39,12 @@ class Images extends Field
 
             $modelClass :: saved(function ($model) use ($request, $requestAttribute) {
                 $files  = $request[ $requestAttribute ];
-                $images = $this -> uploadImages($model, $files, $request -> editMode);
+                $images = $this -> uploadImages($model, $files);
 
                 if ('create' === $request -> editMode) {
                     foreach ($images as $image) {
+                        unset($image[ 'id' ]);
+
                         $model -> enhancedImageUploaderImages() -> create($image);
                     }
                 }
@@ -51,15 +53,11 @@ class Images extends Field
                     foreach ($images as $image) {
                         $imageModel = $model -> enhancedImageUploaderImages() -> where('id', $image[ 'id' ]);
 
-                        if ($imageModel -> count()) {
-                            unset($image[ 'id' ]);
+                        unset($image[ 'id' ]);
 
+                        if ($imageModel -> count()) {
                             $imageModel -> update($image);
                         } else {
-                            $image[ 'order' ] = $image[ 'id' ];
-
-                            unset($image[ 'id' ]);
-
                             $imageModel -> create($image);
                         }
                     }
@@ -68,7 +66,7 @@ class Images extends Field
         }
     }
 
-    protected function uploadImages($model, $files, $editMode = 'create')
+    protected function uploadImages($model, $files)
     {
         $images            = [];
         $modelBaseName     = class_basename(get_class($model));
@@ -78,14 +76,15 @@ class Images extends Field
         $path              = storage_path('app/public/' . $directory);
         $storagePublicDisk = Storage :: disk('public');
 
-        foreach ($files as $key => $file) {
+        foreach ($files as $file) {
             if (! File :: exists($path)) {
                 File :: makeDirectory($path, 0775, true, true);
             }
 
-            $original  = $storagePublicDisk -> putFile($directory, $file);
-            $optimized = $directory . '/' . Str :: random(40) . '.' . $file -> getClientOriginalExtension();
-            $name      = str_replace('.' . $file -> getClientOriginalExtension(), '', $file -> getClientOriginalName());
+            $original  = $storagePublicDisk -> putFile($directory, $file[ 'file' ]);
+            $extension = $file[ 'file' ] -> getClientOriginalExtension();
+            $optimized = $directory . '/' . Str :: random(40) . '.' . $extension;
+            $name      = str_replace('.' . $extension, '', $file[ 'file' ] -> getClientOriginalName());
 
             if ($storagePublicDisk -> copy($original, $optimized)) {
                 $modelLayout = 'enhanced-image-uploader.layouts.' . $modelSingularName;
@@ -103,18 +102,12 @@ class Images extends Field
             }
 
             $image = [
+                'id'        => $file[ 'id' ],
                 'name'      => $name,
                 'original'  => $original,
                 'optimized' => $optimized,
+                'order'     => $file[ 'order' ],
             ];
-
-            if ('create' === $editMode) {
-                $image[ 'order' ] = $key;
-            }
-
-            if ('update' === $editMode) {
-                $image[ 'id' ] = $key;
-            }
 
             $images[] = $image;
 
@@ -136,6 +129,7 @@ class Images extends Field
                     'name'      => $image -> name,
                     'original'  => isset($image -> original) ? Storage :: url($image -> original) : null,
                     'optimized' => isset($image -> optimized) ? Storage :: url($image -> optimized) : null,
+                    'order'     => $image -> order,
                 ];
             }
         }

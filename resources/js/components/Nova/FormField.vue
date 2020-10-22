@@ -56,16 +56,19 @@ export default {
         'viaRelationship',
         'field',
     ],
-    data: () => ({
-        index: 0,
-        repeaterIndex: 0,
-        subfields: [],
-        subfieldsConfig: {},
-        uploadErrors: new Errors(),
-        removeModalOpen: false,
-        deleteSubfield: null,
-        softDelete: true,
-    }),
+    data () {
+        return {
+            index: 0,
+            repeaterIndex: 0,
+            subfields: [],
+            subfieldsConfig: {},
+            uploadErrors: new Errors(),
+            removeModalOpen: false,
+            deleteSubfield: null,
+            softDelete: true,
+            fileChangedHandler: this.fileChanged,
+        };
+    },
     computed: {
         subfieldLabel () {
             const { width, height } = this.subfieldsConfig.fields[this.repeaterIndex].dimensions;
@@ -97,7 +100,10 @@ export default {
         }
     },
     mounted () {
-        this.$root.$on('enhanced-image-uploader-file-changed', this.fileChanged);
+        this.$root.$on('enhanced-image-uploader-file-changed', this.fileChangedHandler);
+    },
+    beforeDestroy () {
+        this.$root.$off('enhanced-image-uploader-file-changed', this.fileChangedHandler);
     },
     methods: {
         getSubfieldsConfig () {
@@ -155,9 +161,9 @@ export default {
         fill (formData) {
             for (let [i, subfield] of this.subfields.entries()) {
                 if (subfield.file) {
-                    const key = subfield.hasOwnProperty('id') ? subfield.id : i;
-
-                    formData.append(`enhanced_image_uploader_images[${key}]`, subfield.file);
+                    formData.append(`enhanced_image_uploader_images[${i}][id]`, subfield.id || null);
+                    formData.append(`enhanced_image_uploader_images[${i}][order]`, i);
+                    formData.append(`enhanced_image_uploader_images[${i}][file]`, subfield.file);
                 }
             }
         },
@@ -211,6 +217,7 @@ export default {
                     this.subfields[i].name = null;
                     this.subfields[i].original = null;
                     this.subfields[i].optimized = null;
+                    this.subfields[i].order = null;
                 }
             }
         },

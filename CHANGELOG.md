@@ -2,6 +2,11 @@
 
 All notable changes to `enhanced-image-uploader` will be documented in this file
 
+## 1.0.4 - 2020-10-22
+
+- Fix: On the edit screen the newly uploaded image replaces the old image
+- Reduce the default number of limit
+
 ## 1.0.3 - 2020-09-24
 
 - Update composer.json and CHANGELOG.md files
