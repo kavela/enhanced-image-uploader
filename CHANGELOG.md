@@ -2,7 +2,7 @@
 
 All notable changes to `enhanced-image-uploader` will be documented in this file
 
-## 1.1
+## 1.1.0 - 2020-12-07
 
 - Feat: Added new method (method) to control images processing commands (fit, resize, crop, etc.)
 - Feat: Added new method (constraints) to control images processing command constraints (aspectRatio, upsize, etc.)
