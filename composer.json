@@ -1,9 +1,11 @@
 {
   "name": "kavela/enhanced-image-uploader",
-  "description": "Image fields for Nova apps",
+  "description": "Repeatable image field for Laravel Nova applications",
   "keywords": [
     "laravel",
-    "nova"
+    "nova",
+    "repeater",
+    "repeatable field"
   ],
   "homepage": "https://github.com/kavela/enhanced-image-uploader",
   "license": "MIT",

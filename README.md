@@ -1,4 +1,4 @@
-# Image fields for Nova apps
+# Repeatable image field for Laravel Nova applications
 
 This package contains a Nova field to add images to resources.
 
