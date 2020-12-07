@@ -73,6 +73,30 @@ You can limit the number of images with `limit()`.
 Images::make('Images')->limit($maxNumber),
 ```
 
+## Processing method (fit, resize, crop, etc.) of images
+
+```php
+Images::make('Images')->method('fit'),
+```
+
+## Constraints (aspectRatio, upsize, etc.) for the images processing method
+
+```php
+Images::make('Images')->constraints([ 'aspectRatio', 'upsize' ]),
+```
+
+## Images quality
+
+```php
+Images::make('Images')->quality(60),
+```
+
+## Saved images format
+
+```php
+Images::make('Images')->format('jpg'),
+```
+
 ### Testing
 
 ``` bash

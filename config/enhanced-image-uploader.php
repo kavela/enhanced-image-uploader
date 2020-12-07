@@ -24,21 +24,33 @@ return [
     |
     | // Model name (project, product, etc.)
     | 'model_lowercase_name' => [
+    |
     |     // Group of fields should be repeatable or not
     |     'repeatable' => true, // Or false
+    |
     |     // Group of fields
     |     'fields'     => [
     |         [
-    |             'dimensions' => [
+    |             'dimensions'  => [
     |                 'width'  => 500, // Or any number
     |                 'height' => 300, // Or any number
     |             ],
+    |             'method'      => 'fit',
+    |             'constraints' => [
+    |                 '',
+    |                 '',
+    |             ],
+    |             'quality'     => 60,
+    |             'format'      => 'jpg',
     |         ],
     |     ],
-    | ]
+    |
+    | ],
     |
     */
 
-    'layouts' => [],
+    'layouts' => [
+        // Each model configurations goes here
+    ],
 
 ];

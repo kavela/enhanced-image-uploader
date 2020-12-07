@@ -15,6 +15,14 @@ class Images extends Field
 
     protected $repeaterIndex = 0;
 
+    protected $method;
+
+    protected $constraints;
+
+    protected $quality;
+
+    protected $format;
+
     public function __construct($name, $attribute = null, $resolveCallback = null)
     {
         if ('enhanced_image_uploader_images' !== $attribute) {
@@ -25,11 +33,43 @@ class Images extends Field
 
         $this -> hideFromIndex();
         $this -> limit();
+        $this -> method();
+        $this -> constraints();
+        $this -> quality();
+        $this -> format();
     }
 
     public function limit($limit = 100)
     {
         return $this -> withMeta([ 'limit' => $limit ]);
+    }
+
+    public function method($method = 'fit')
+    {
+        $this -> method = $method;
+
+        return $this;
+    }
+
+    public function constraints($constraints = [])
+    {
+        $this -> constraints = $constraints;
+
+        return $this;
+    }
+
+    public function quality($quality = 60)
+    {
+        $this -> quality = $quality;
+
+        return $this;
+    }
+
+    public function format($format = 'jpg')
+    {
+        $this -> format = $format;
+
+        return $this;
     }
 
     protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute)
@@ -94,11 +134,23 @@ class Images extends Field
                     $this -> repeaterIndex = 0;
                 }
 
-                $dimensions = config($modelLayout . '.fields.' . $this -> repeaterIndex . '.dimensions');
+                $config      = config($modelLayout . '.fields.' . $this -> repeaterIndex);
+                $width       = $config[ 'dimensions' ][ 'width' ];
+                $height      = $config[ 'dimensions' ][ 'height' ];
+                $method      = isset($config[ 'method' ]) ? $config[ 'method' ] : $this -> method;
+                $constraints = isset($config[ 'constraints' ]) ? $config[ 'constraints' ] : $this -> constraints;
+                $quality     = isset($config[ 'quality' ]) ? $config[ 'quality' ] : $this -> quality;
+                $format      = isset($config[ 'format' ]) ? $config[ 'format' ] : $this -> format;
 
                 Image :: make($storagePublicDisk -> get($optimized))
-                    -> fit($dimensions[ 'width' ], $dimensions[ 'height' ])
-                    -> save(storage_path('app/public/' . $optimized));
+                    ->{$method}($width, $height, function ($constraint) use ($constraints) {
+                        if (! empty($constraints)) {
+                            foreach ($constraints as $constraintsMethod) {
+                                $constraint ->{$constraintsMethod}();
+                            }
+                        }
+                    })
+                    -> save(storage_path('app/public/' . $optimized), $quality, $format);
             }
 
             $image = [
